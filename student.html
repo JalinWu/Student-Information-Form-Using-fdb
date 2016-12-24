@@ -14,7 +14,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
+            <tr id="table-content">
                 <td>1</td>
                 <td>Orange</td>
             </tr>
@@ -39,6 +39,10 @@
       name: "Koding",
       num: i
     });
+  }
+  
+  for(var i = 0; i < studentCollection.find().length; i++) {
+    $("#table-content").append("<td>"+studentCollection.find()[i].num+"</td><td>"+studentCollection.find()[i].name+"</td>");
   }
   
 </script>
