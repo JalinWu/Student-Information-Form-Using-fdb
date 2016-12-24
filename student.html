@@ -47,7 +47,8 @@
   
   $("td").click(function(){
     var n = $(this).text();
-    console.log(n);
+    result = studentCollection.find()[n].name;
+    console.log(result);
   });
   
 </script>
