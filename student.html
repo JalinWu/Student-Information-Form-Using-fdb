@@ -8,5 +8,12 @@
   var fdb = new ForerunnerDB();
   var db = fdb.db("OA");
   var studentCollection = db.collection('students');
+  for(var i = 0; i < 10; i++) {
+    studentCollection.insert({
+      name: "Koding",
+      num: i
+    });
+  }
+  
 </script>
 </html>
