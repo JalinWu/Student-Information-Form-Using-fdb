@@ -42,7 +42,7 @@
   }
   
   for(var i = 0; i < studentCollection.find().length; i++) {
-    $("#table-content").append("<tr><td>"+studentCollection.find()[i].num+"</td><td>"+studentCollection.find()[i].name+"</td></tr>");
+    $("#table-content").append("<tr><td data-toggle="modal">"+studentCollection.find()[i].num+"</td><td>"+studentCollection.find()[i].name+"</td></tr>");
   }
   
   $("td").click(function(){
