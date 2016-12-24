@@ -13,8 +13,8 @@
                 <td>姓名</td>
             </tr>
         </thead>
-        <tbody>
-            <tr id="table-content">
+        <tbody id="table-content">
+            <tr>
                 <td>1</td>
                 <td>Orange</td>
             </tr>
@@ -42,7 +42,7 @@
   }
   
   for(var i = 0; i < studentCollection.find().length; i++) {
-    $("#table-content").append("<td>"+studentCollection.find()[i].num+"</td><td>"+studentCollection.find()[i].name+"</td>");
+    $("#table-content").append("<tr><td>"+studentCollection.find()[i].num+"</td><td>"+studentCollection.find()[i].name+"</td></tr>");
   }
   
 </script>
