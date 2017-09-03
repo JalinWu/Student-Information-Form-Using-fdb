@@ -1,54 +1,399 @@
-<html>
-  <head>
-    <link href="css/bootstrap.css" rel="stylesheet">
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
     <script src="https://orangeappletw.github.io/JavaScript-Advanced-textbook/lesson_5/js/fdb-all.min.js"></script>
-    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
-    <script src="js/bootstrap.js"></script>   
-  </head>
-<body>
-    <table>
-        <thead>
-            <tr>
-                <td>id</td>
-                <td>姓名</td>
-            </tr>
-        </thead>
-        <tbody id="table-content">
-            <tr>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- sweetalert2 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.5/sweetalert2.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.5/sweetalert2.min.css">
+
+</head>
+
+<!-- 
+    Lesson 5:
+        不寫 HTML，用 console 印即可
+-->
+<!-- 
+    Lesson 6:
+        1. 建 row 與 column (col-md-3/col-md-6) 
+        2. 在第二個 column 中建 table (id/姓名/年齡/查詢)
+-->
+<!-- 
+    Lesson 7:
+        1. 在第一個 column 中建 表單 (姓名/年齡/確認)
+-->
+<!-- 
+    Lesson 8:
+        1. 為 table 新增一個欄位：刪除
+-->
+<!-- 
+    Lesson 9:
+        1. 為 table 新增一個欄位：修改
+-->
+<!-- 
+    Lesson 10:
+        1. 在第一個 column 中建 篩選器 (年紀大於/年紀小於/確認)
+-->
+<!-- 
+    Lesson 11:
+        1. 在第一個 column 中建 篩選器 (甲班/乙班/確認)
+-->
+<body class="container" style="padding-top:20px">
+    <div class="row">
+        <div class="col-md-2">
+            <h3>新增學生</h3>
+            <br> 姓名：
+            <input type="text" class="form-control" id="newName" />
+            <br> 年級：
+            <input type="text" class="form-control" id="newGrade" />
+            <br> 班級：
+            <input type="text" class="form-control" id="newClass" />
+            <br> 電話：
+            <input type="text" class="form-control" id="newPhone" />
+            <br>
+            <button type="button" class="btn btn-primary" onclick="createStudent()">確認</button>
+            <br>
+            <h3>篩選學生</h3>
+            <br> 年級大於
+            <input type="text" class="form-control" id="ageGreaterThan" />
+            <br> 年級小於
+            <input type="text" class="form-control" id="ageLowerThan" />
+            <br>
+            <button type="button" class="btn btn-primary" onclick="filter()">確認</button>
+            <br>
+            <h3>班級篩選</h3>
+            <input type="checkbox" value="甲班" id="classA" /> 甲班
+            <input type="checkbox" value="乙班" id="classB" /> 乙班
+            <button type="button" class="btn btn-success" onclick="classFilter()">確認</button>
+        </div>
+        <div class="col-md-1"></div>
+        <div class="col-md-6">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <td>
+                            <h3>id </h3>
+                        </td>
+                        <td>
+                            <h3>姓名 </h3>
+                        </td>
+                        <td>
+                            <h3>年級 </h3>
+                        </td>
+                        <td>
+                            <h3>班級 </h3>
+                        </td>
+                        <td>
+                            <h3>電話 </h3>
+                        </td>
+                        <td>
+                            <h3>查詢 </h3>
+                        </td>
+                        <td>
+                            <h3>刪除 </h3>
+                        </td>
+                        <td>
+                            <h3>修改 </h3>
+                        </td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <!--
                 <td>1</td>
                 <td>Orange</td>
-            </tr>
-        </tbody>
-    </table>
-  <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-sm">Small modal</button>
-
-  <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
-    <div class="modal-dialog modal-sm" role="document">
-      <div class="modal-content">
-        ...
-      </div>
+                -->
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
-  </div>
+
+    <script>
+        /* 
+            Lesson 5:
+                1. 開 DB
+                2. 建表(collection)
+                3. 於主控台手動新增資料
+                4. 印出資料表中的內容
+            備註：有學生想刪資料的話，跟他說之後會教到，
+                 資料真的多到無力回天的話，請他直接改資料表的名字，就是重開一個資料表
+            回家作業：手動額外新增 15 筆資料
+        */
+        /* 
+            Lesson 6:
+                1. 將資料表的內容用表格呈現出來，外加一顆查詢按鈕(id/姓名/年齡/查詢)
+                2. 點下查詢後，將該筆資料的 _id 顯示出來
+            備註：建議不要照講義中結合 Bootstrap 的 Modal 功能，會相當慘烈，
+                 這裡改教使用 SweetAlert，要引用的 cdn 連結可放置於公佈欄中
+            回家作業：將跳出的 swal 中的內容改成: (姓名)的ID是：(_id)，有點難，要給提示
+        */
+        var fdb = new ForerunnerDB();
+        var db = fdb.db("studentData");
+
+        var studentCollection = db.collection('students');
+
+        studentCollection.load(function () {
+            console.log(studentCollection.find());
+
+            for (i = 0; i < studentCollection.find().length; i++) {
+                $("tbody").append("<tr><td>" + i + "</td><td>" +
+                    studentCollection.find()[i].name + "</td><td>" +
+                    studentCollection.find()[i].grade + "</td><td>" +
+                    studentCollection.find()[i].class + "</td><td>" +
+                    studentCollection.find()[i].phone + "</td><td>" +
+                    "<button onclick=\"search(\'"+ studentCollection.find()[i]._id +"\')\" class=\"btn btn-info\">查詢</button>" + "</td><td>" +
+                    "<button onclick=\"remove(\'"+ studentCollection.find()[i]._id +"\')\" class=\"btn btn-danger\">刪除</button>" + "</td><td>" +
+                    "<button onclick=\"update(\'"+ studentCollection.find()[i]._id +"\')\" class=\"btn btn-warning\">修改</button>" + "</td></tr>");
+            }
+        });
+
+        function search(id) {
+            var result = studentCollection.find({
+                _id: id
+            });
+            swal(
+                result[0].name + "的ID是：",
+                id
+            )
+        }
+
+        //===================================================
+        /* 
+            Lesson 7:
+                1. 取得輸入框內的值
+                2. 插入Database
+                3. 清空輸入框
+                4. 重整頁面
+            回家作業：將表與表單改成-->姓名/年級/班級/電話
+        */
+
+        function createStudent() {
+            // 1. 取得輸入框內的值
+            var newStudent = {
+                name: $("#newName").val(),
+                grade: parseInt($("#newGrade").val()),
+                class: $("#newClass").val(),
+                phone: $("#newPhone").val()
+            };
+
+            // 2. 插入Database
+            studentCollection.insert(newStudent);
+            studentCollection.save();
+
+            // 3. 清空輸入框
+            $("#newName").val("");
+            $("#newGrade").val("");
+            $("#newClass").val("");
+            $("#newPhone").val("");
+
+
+            // 4. 重整頁面
+            swal({
+                type: 'success',
+                title: "加入成功",
+                timer: 2000
+            }).then(function () {
+                location.reload();
+            });
+        }
+
+        //===================================================
+        /* 
+            Lesson 8:
+                1. 刪除特定 id 的資料
+                2. 存檔一下
+                3. 重整頁面
+            回家作業：先跳出一個“你確定嗎？ 刪了就救不回來了喔！”的 swal，
+                    學生已經學 swal 三堂課了，簡單提示一下是可以做得出來的
+        */
+        function remove(id) {
+            swal({
+                title: '你確定嗎？',
+                text: "刪了就救不回來了喔！",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then(function () {
+                // 1. 刪除特定 id 的資料
+                studentCollection.remove({
+                    _id: id
+                });
+
+                // 2. 存檔一下
+                studentCollection.save();
+
+                // 3. 重整頁面
+                swal(
+                    '已刪除',
+                    '已成功刪除一筆資料',
+                    'success'
+                ).then(function () {
+                    location.reload();
+                });
+
+            })
+
+        }
+
+        //===================================================
+        /* 
+            Lesson 9:
+                1. 先去複製整段需要的 swal
+                2. 改 swal 的進度條與四個問題
+                3. 將要更新的資料整理成一個物件
+                4. 更新至資料庫中
+                5. 重整頁面
+            回家作業：無
+        */
+        function update(id) {
+            swal.setDefaults({
+                input: 'text',
+                confirmButtonText: 'Next &rarr;',
+                showCancelButton: true,
+                animation: false,
+                progressSteps: ['1', '2', '3', '4']
+            })
+
+            var steps = [
+                {
+                    title: 'Question 1',
+                    text: '請問新的姓名是?'
+                },
+                {
+                    title: 'Question 2',
+                    text: '請問新的年級是?'
+                },
+                {
+                    title: 'Question 3',
+                    text: '請問新的班級是?'
+                },
+                {
+                    title: 'Question 4',
+                    text: '請問新的電話是?'
+                }
+            ]
+
+            swal.queue(steps).then(function (result) {
+                swal.resetDefaults()
+
+                var updateStudent = {
+                    name: result[0],
+                    grade: result[1],
+                    class: result[2],
+                    phone: result[3]
+                };
+
+                studentCollection.updateById(id, updateStudent);
+                studentCollection.save();
+
+                swal({
+                    title: '完成!',
+                    confirmButtonText: '確定!'
+                }).then(function () {
+                    location.reload();
+                })
+
+            }, function () {
+                swal.resetDefaults()
+            })
+        }
+
+        //===================================================
+        /* 
+            Lesson 10:
+                1. 刪除所有的資料
+                2. 防呆
+                3. 取得篩選後的資料
+                4. 顯示篩選後的資料
+            回家作業：無
+        */
+        function filter() {
+            // 1. 刪除所有的資料
+            $("tbody").empty();
+
+            // 2. 防呆
+            var greaterAge = parseInt($("#ageGreaterThan").val());
+            var lowerAge = parseInt($("#ageLowerThan").val());
+            if (!greaterAge) {
+                greaterAge = 0;
+            }
+            if (!lowerAge) {
+                lowerAge = 99;
+            }
+
+            // 3. 取得篩選後的資料
+            var result = studentCollection.find({
+                grade: {
+                    $gt: greaterAge,
+                    $lt: lowerAge
+                }
+            });
+
+            // 4. 顯示篩選後的資料
+            for (i = 0; i < result.length; i++) {
+                $("tbody").append("<tr><td>" + i + "</td><td>" +
+                    result[i].name + "</td><td>" +
+                    result[i].grade + "</td><td>" +
+                    result[i].class + "</td><td>" +
+                    result[i].phone + "</td><td>" +
+                    "<button onclick=\"search(\'" + result[i]._id + "\')\" class=\"btn btn-info\">查詢</button>" + "</td><td>" +
+                    "<button onclick=\"remove(\'" + result[i]._id + "\')\" class=\"btn btn-danger\">刪除</button>" + "</td><td>" +
+                    "<button onclick=\"update(\'" + result[i]._id + "\')\" class=\"btn btn-warning\">修改</button>" + "</td></tr>");
+            }
+        }
+
+        //===================================================
+        /* 
+            Lesson 11:
+                1. 刪除所有的資料
+                2. 建立篩選條件
+                3. 取得篩選後的資料
+                4. 顯示篩選後的資料
+            回家作業：無
+        */
+        function classFilter() {
+            // 1. 刪除所有的資料
+            $("tbody").empty();
+
+            // 2. 建立篩選條件
+            var classChecked = [];
+            if ($("#classA").prop("checked")) {
+                classChecked.push("甲班");
+            }
+            if ($("#classB").prop("checked")) {
+                classChecked.push("乙班");
+            }
+
+            // 3. 取得篩選後的資料
+            var result = studentCollection.find({
+                class: {
+                    $in: classChecked
+                }
+            });
+
+            // 4. 顯示篩選後的資料
+            for (i = 0; i < result.length; i++) {
+                $("tbody").append("<tr><td>" + i + "</td><td>" +
+                    result[i].name + "</td><td>" +
+                    result[i].grade + "</td><td>" +
+                    result[i].class + "</td><td>" +
+                    result[i].phone + "</td><td>" +
+                    "<button onclick=\"search(\'" + result[i]._id + "\')\" class=\"btn btn-info\">查詢</button>" + "</td><td>" +
+                    "<button onclick=\"remove(\'" + result[i]._id + "\')\" class=\"btn btn-danger\">刪除</button>" + "</td><td>" +
+                    "<button onclick=\"update(\'" + result[i]._id + "\')\" class=\"btn btn-warning\">修改</button>" + "</td></tr>");
+            }
+        }
+    </script>
 </body>
-<script>
-  var fdb = new ForerunnerDB();
-  var db = fdb.db("OA");
-  var studentCollection = db.collection('students');
-  for(var i = 0; i < 10; i++) {
-    studentCollection.insert({
-      name: "Koding",
-      num: i
-    });
-  }
-  
-  for(var i = 0; i < studentCollection.find().length; i++) {
-    $("#table-content").append("<tr><td>"+studentCollection.find()[i].num+"</td><td>"+studentCollection.find()[i].name+"</td></tr>");
-  }
-  $("td").click(function(){
-    var n = $(this).text();
-    result = studentCollection.find()[n].name;
-    console.log(result);
-  });
-  
-</script>
-</html> 
+
+</html>
